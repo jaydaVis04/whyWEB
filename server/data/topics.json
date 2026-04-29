@@ -1,0 +1,72 @@
+[
+  {
+    "id": "topic-html",
+    "title": "HTML Foundations",
+    "category": "HTML",
+    "difficulty": "Beginner",
+    "description": "Learn semantic page structure, headings, links, forms, media, and accessibility-friendly markup.",
+    "whyItMatters": "HTML is the skeleton of every website. Understanding structure makes every other frontend skill easier and helps you build pages that search engines, browsers, and users can understand.",
+    "status": "Completed",
+    "dateAdded": "2026-04-20"
+  },
+  {
+    "id": "topic-css",
+    "title": "Modern CSS Systems",
+    "category": "CSS",
+    "difficulty": "Beginner",
+    "description": "Study layout, spacing, responsive design, Flexbox, Grid, transitions, and design tokens.",
+    "whyItMatters": "CSS is what turns raw content into polished products. Good styling skills help you create interfaces that feel trustworthy, readable, and professional on every screen size.",
+    "status": "Learning",
+    "dateAdded": "2026-04-20"
+  },
+  {
+    "id": "topic-javascript",
+    "title": "JavaScript Interactivity",
+    "category": "JavaScript",
+    "difficulty": "Intermediate",
+    "description": "Practice variables, arrays, objects, functions, DOM updates, events, async code, and fetch requests.",
+    "whyItMatters": "JavaScript powers interaction on the web. It lets users search, filter, submit forms, load data, and work with real-time interfaces instead of static pages.",
+    "status": "Learning",
+    "dateAdded": "2026-04-21"
+  },
+  {
+    "id": "topic-vue",
+    "title": "Vue.js Components",
+    "category": "Vue",
+    "difficulty": "Intermediate",
+    "description": "Build reusable components, page routing, reactive state, forms, and structured frontends with Vue 3.",
+    "whyItMatters": "Vue helps developers organize growing interfaces into clean reusable pieces. That makes projects easier to scale, maintain, and present in professional portfolios.",
+    "status": "Not Started",
+    "dateAdded": "2026-04-22"
+  },
+  {
+    "id": "topic-backend-apis",
+    "title": "Backend APIs with Express",
+    "category": "Backend",
+    "difficulty": "Intermediate",
+    "description": "Create routes, accept JSON requests, validate data, and return responses that a frontend can use.",
+    "whyItMatters": "Backend APIs connect the interface to real data. They are the reason apps can save profiles, dashboards, posts, and business logic instead of only showing temporary information.",
+    "status": "Not Started",
+    "dateAdded": "2026-04-23"
+  },
+  {
+    "id": "topic-databases",
+    "title": "Database Thinking",
+    "category": "Databases",
+    "difficulty": "Intermediate",
+    "description": "Understand persistent storage, records, IDs, validation, and how applications read and write structured data.",
+    "whyItMatters": "Data storage is what makes an app useful after refresh. Even a simple JSON file demonstrates the core database idea: your app should remember what users create and edit.",
+    "status": "Not Started",
+    "dateAdded": "2026-04-24"
+  },
+  {
+    "id": "topic-deployment",
+    "title": "Deployment and Launch",
+    "category": "Deployment",
+    "difficulty": "Advanced",
+    "description": "Learn how to move a project from local development to a live environment with build steps, hosting, and environment configuration.",
+    "whyItMatters": "Deployment is how your work reaches real users, teachers, clients, or hiring managers. A finished app only becomes truly useful once people can access it online.",
+    "status": "Not Started",
+    "dateAdded": "2026-04-25"
+  }
+]
