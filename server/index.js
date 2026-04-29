@@ -16,6 +16,19 @@ const requiredFields = [
   'whyItMatters',
   'status',
 ];
+const allowedCategories = [
+  'HTML',
+  'CSS',
+  'JavaScript',
+  'Vue',
+  'Backend',
+  'APIs',
+  'Databases',
+  'Deployment',
+  'UI Design',
+];
+const allowedDifficulties = ['Beginner', 'Intermediate', 'Advanced'];
+const allowedStatuses = ['Not Started', 'Learning', 'Completed'];
 
 function normalizeTopicInput(payload = {}) {
   return {
@@ -36,6 +49,18 @@ function validateTopic(topic) {
 
   if (missingFields.length > 0) {
     return `Missing required fields: ${missingFields.join(', ')}`;
+  }
+
+  if (!allowedCategories.includes(topic.category)) {
+    return `Category must be one of: ${allowedCategories.join(', ')}`;
+  }
+
+  if (!allowedDifficulties.includes(topic.difficulty)) {
+    return `Difficulty must be one of: ${allowedDifficulties.join(', ')}`;
+  }
+
+  if (!allowedStatuses.includes(topic.status)) {
+    return `Status must be one of: ${allowedStatuses.join(', ')}`;
   }
 
   return null;
