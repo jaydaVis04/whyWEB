@@ -62,7 +62,10 @@
         title="No topics match your filters."
         message="Try clearing the search or filter options, or add a new topic to expand the database."
       >
-        <Button variant="secondary" @click="resetFilters">Reset filters</Button>
+        <div class="flex flex-wrap justify-center gap-3">
+          <Button variant="secondary" @click="resetFilters">Reset filters</Button>
+          <Button @click="openCreateDialog">Add a new topic</Button>
+        </div>
       </EmptyState>
 
       <div v-else-if="activeView === 'cards'" class="grid gap-5 md:grid-cols-2 2xl:grid-cols-3">
