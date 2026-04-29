@@ -50,6 +50,11 @@
     </section>
 
     <section class="mt-8">
+      <Alert v-if="successMessage" class="mb-6">
+        <p class="font-semibold text-sky-50">Update saved</p>
+        <p class="mt-2 text-sm text-sky-100/90">{{ successMessage }}</p>
+      </Alert>
+
       <LoadingState v-if="loading" />
 
       <EmptyState
@@ -96,9 +101,15 @@
                     <p class="mt-1 max-w-md text-slate-400">{{ topic.description }}</p>
                   </div>
                 </td>
-                <td class="px-6 py-4">{{ topic.category }}</td>
-                <td class="px-6 py-4">{{ topic.difficulty }}</td>
-                <td class="px-6 py-4">{{ topic.status }}</td>
+                <td class="px-6 py-4">
+                  <Badge variant="secondary">{{ topic.category }}</Badge>
+                </td>
+                <td class="px-6 py-4">
+                  <Badge :variant="getDifficultyVariant(topic.difficulty)">{{ topic.difficulty }}</Badge>
+                </td>
+                <td class="px-6 py-4">
+                  <Badge :variant="getStatusVariant(topic.status)">{{ topic.status }}</Badge>
+                </td>
                 <td class="px-6 py-4">{{ formatDate(topic.dateAdded) }}</td>
                 <td class="px-6 py-4">
                   <div class="flex flex-wrap gap-2">
@@ -177,6 +188,7 @@ const statuses = ['Not Started', 'Learning', 'Completed'];
 
 const loading = ref(true);
 const errorMessage = ref('');
+const successMessage = ref('');
 const formError = ref('');
 const formSubmitting = ref(false);
 const topics = ref([]);
@@ -292,17 +304,36 @@ function closeFormDialog() {
   formError.value = '';
 }
 
+function getDifficultyVariant(difficulty) {
+  return {
+    Beginner: 'default',
+    Intermediate: 'accent',
+    Advanced: 'warning',
+  }[difficulty] || 'secondary';
+}
+
+function getStatusVariant(status) {
+  return {
+    Completed: 'success',
+    Learning: 'warning',
+    'Not Started': 'secondary',
+  }[status] || 'default';
+}
+
 async function handleFormSubmit(payload) {
   formSubmitting.value = true;
   formError.value = '';
+  successMessage.value = '';
 
   try {
     if (selectedTopic.value?.id) {
       const updatedTopic = await topicsApi.updateTopic(selectedTopic.value.id, payload);
       topics.value = topics.value.map((topic) => (topic.id === updatedTopic.id ? updatedTopic : topic));
+      successMessage.value = `"${updatedTopic.title}" was updated successfully.`;
     } else {
       const createdTopic = await topicsApi.createTopic(payload);
       topics.value = [createdTopic, ...topics.value];
+      successMessage.value = `"${createdTopic.title}" was added to the topic database.`;
     }
 
     formDialogOpen.value = false;
@@ -329,8 +360,10 @@ async function confirmDelete() {
   }
 
   deleteSubmitting.value = true;
+  successMessage.value = '';
 
   try {
+    const deletedTitle = topicPendingDelete.value.title;
     await topicsApi.deleteTopic(topicPendingDelete.value.id);
     topics.value = topics.value.filter((item) => item.id !== topicPendingDelete.value.id);
 
@@ -340,6 +373,7 @@ async function confirmDelete() {
     }
 
     closeDeleteDialog();
+    successMessage.value = `"${deletedTitle}" was deleted from the database.`;
   } catch (error) {
     errorMessage.value = error.message;
   } finally {
