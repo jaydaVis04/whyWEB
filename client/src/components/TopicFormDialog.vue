@@ -20,6 +20,7 @@
         <div>
           <label class="mb-2 block text-sm text-slate-300">Title</label>
           <Input v-model="form.title" placeholder="Example: Accessibility Basics" />
+          <p v-if="validationErrors.title" class="mt-2 text-sm text-red-200">{{ validationErrors.title }}</p>
         </div>
         <div>
           <label class="mb-2 block text-sm text-slate-300">Date added</label>
@@ -34,6 +35,7 @@
             <option value="" disabled>Select category</option>
             <option v-for="item in categories" :key="item" :value="item">{{ item }}</option>
           </Select>
+          <p v-if="validationErrors.category" class="mt-2 text-sm text-red-200">{{ validationErrors.category }}</p>
         </div>
         <div>
           <label class="mb-2 block text-sm text-slate-300">Difficulty</label>
@@ -41,6 +43,7 @@
             <option value="" disabled>Select difficulty</option>
             <option v-for="item in difficulties" :key="item" :value="item">{{ item }}</option>
           </Select>
+          <p v-if="validationErrors.difficulty" class="mt-2 text-sm text-red-200">{{ validationErrors.difficulty }}</p>
         </div>
         <div>
           <label class="mb-2 block text-sm text-slate-300">Status</label>
@@ -48,6 +51,7 @@
             <option value="" disabled>Select status</option>
             <option v-for="item in statuses" :key="item" :value="item">{{ item }}</option>
           </Select>
+          <p v-if="validationErrors.status" class="mt-2 text-sm text-red-200">{{ validationErrors.status }}</p>
         </div>
       </div>
 
@@ -57,6 +61,7 @@
           v-model="form.description"
           placeholder="Describe what this topic covers and what you would learn."
         />
+        <p v-if="validationErrors.description" class="mt-2 text-sm text-red-200">{{ validationErrors.description }}</p>
       </div>
 
       <div>
@@ -65,6 +70,7 @@
           v-model="form.whyItMatters"
           placeholder="Explain why this topic is useful in real web development."
         />
+        <p v-if="validationErrors.whyItMatters" class="mt-2 text-sm text-red-200">{{ validationErrors.whyItMatters }}</p>
       </div>
 
       <Alert v-if="errorMessage" variant="destructive">
@@ -116,6 +122,14 @@ const props = defineProps({
 const emit = defineEmits(['close', 'submit']);
 
 const form = reactive(emptyForm());
+const validationErrors = reactive({
+  title: '',
+  category: '',
+  difficulty: '',
+  description: '',
+  whyItMatters: '',
+  status: '',
+});
 
 const isEditing = computed(() => Boolean(props.topic?.id));
 
@@ -127,11 +141,43 @@ watch(
     }
 
     Object.assign(form, props.topic ? { ...props.topic } : emptyForm());
+    clearValidationErrors();
   },
   { immediate: true },
 );
 
+watch(
+  form,
+  () => {
+    clearValidationErrors();
+  },
+  { deep: true },
+);
+
+function clearValidationErrors() {
+  Object.keys(validationErrors).forEach((key) => {
+    validationErrors[key] = '';
+  });
+}
+
+function validateForm() {
+  clearValidationErrors();
+
+  if (!form.title.trim()) validationErrors.title = 'A title is required.';
+  if (!form.category.trim()) validationErrors.category = 'Choose a category.';
+  if (!form.difficulty.trim()) validationErrors.difficulty = 'Choose a difficulty level.';
+  if (!form.status.trim()) validationErrors.status = 'Choose a learning status.';
+  if (!form.description.trim()) validationErrors.description = 'Add a short description.';
+  if (!form.whyItMatters.trim()) validationErrors.whyItMatters = 'Explain why this topic matters.';
+
+  return !Object.values(validationErrors).some(Boolean);
+}
+
 function submitForm() {
+  if (!validateForm()) {
+    return;
+  }
+
   emit('submit', { ...form });
 }
 </script>
