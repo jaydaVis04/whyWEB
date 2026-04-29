@@ -132,6 +132,14 @@
       @close="detailsDialogOpen = false"
       @edit="openEditDialog"
     />
+
+    <DeleteConfirmDialog
+      :open="deleteDialogOpen"
+      :topic="topicPendingDelete"
+      :submitting="deleteSubmitting"
+      @close="closeDeleteDialog"
+      @confirm="confirmDelete"
+    />
   </div>
 </template>
 
@@ -146,6 +154,7 @@ import EmptyState from '@/components/EmptyState.vue';
 import FilterBar from '@/components/FilterBar.vue';
 import LoadingState from '@/components/LoadingState.vue';
 import StatsCards from '@/components/StatsCards.vue';
+import DeleteConfirmDialog from '@/components/DeleteConfirmDialog.vue';
 import TopicCard from '@/components/TopicCard.vue';
 import TopicDetailsDialog from '@/components/TopicDetailsDialog.vue';
 import TopicFormDialog from '@/components/TopicFormDialog.vue';
@@ -174,6 +183,9 @@ const topics = ref([]);
 const selectedTopic = ref(null);
 const formDialogOpen = ref(false);
 const detailsDialogOpen = ref(false);
+const deleteDialogOpen = ref(false);
+const deleteSubmitting = ref(false);
+const topicPendingDelete = ref(null);
 
 const search = ref('');
 const categoryFilter = ref('');
@@ -302,22 +314,36 @@ async function handleFormSubmit(payload) {
 }
 
 async function handleDelete(topic) {
-  const confirmed = window.confirm(`Delete "${topic.title}" from the topic database?`);
+  topicPendingDelete.value = topic;
+  deleteDialogOpen.value = true;
+}
 
-  if (!confirmed) {
+function closeDeleteDialog() {
+  deleteDialogOpen.value = false;
+  topicPendingDelete.value = null;
+}
+
+async function confirmDelete() {
+  if (!topicPendingDelete.value) {
     return;
   }
 
-  try {
-    await topicsApi.deleteTopic(topic.id);
-    topics.value = topics.value.filter((item) => item.id !== topic.id);
+  deleteSubmitting.value = true;
 
-    if (selectedTopic.value?.id === topic.id) {
+  try {
+    await topicsApi.deleteTopic(topicPendingDelete.value.id);
+    topics.value = topics.value.filter((item) => item.id !== topicPendingDelete.value.id);
+
+    if (selectedTopic.value?.id === topicPendingDelete.value.id) {
       selectedTopic.value = null;
       detailsDialogOpen.value = false;
     }
+
+    closeDeleteDialog();
   } catch (error) {
     errorMessage.value = error.message;
+  } finally {
+    deleteSubmitting.value = false;
   }
 }
 </script>
